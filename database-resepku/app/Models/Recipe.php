@@ -12,8 +12,15 @@ class Recipe extends Model
     protected $fillable = [
         'title',
         'description',
+        'ingredients',
+        'steps',
         'photo',
         'user_id'
+    ];
+
+    protected $casts = [
+        'ingredients' => 'array',
+        'steps' => 'array',
     ];
 
     public function user()
