@@ -21,3 +21,9 @@ Route::get('/recipes', [RecipeController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/recipes', [RecipeController::class, 'store']);
 });
+
+Route::get('/recipes/{id}', [RecipeController::class, 'show']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::put('/recipes/{id}', [RecipeController::class, 'update']);
+});
