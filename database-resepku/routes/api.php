@@ -25,5 +25,14 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/recipes/{id}', [RecipeController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::put('/recipes/{id}', [RecipeController::class, 'update']);
+    Route::post('/recipes/{id}', [RecipeController::class, 'update']);
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
+});
+
+Route::middleware('auth:sanctum')->delete(
+    '/recipes/{id}/image', 
+    [RecipeController::class, 'deletePhoto']
+);

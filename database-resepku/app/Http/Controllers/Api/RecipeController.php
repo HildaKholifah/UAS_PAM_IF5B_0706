@@ -7,12 +7,17 @@ use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class RecipeController extends Controller
 {
     public function index()
     {
         $recipes = Recipe::latest()->get();
+
+        $recipe->image_url = $recipe->image
+            ? asset('storage/' . $recipe->image)
+            : null;
 
         return response()->json([
             'success' => true,
@@ -28,6 +33,7 @@ class RecipeController extends Controller
             'description' => 'nullable|string',
             'ingredients' => 'required|array|min:1',
             'steps' => 'required|array|min:1',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -38,11 +44,19 @@ class RecipeController extends Controller
             ], 422);
         }
 
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')
+                ->store('recipes', 'public');
+        }
+
         $recipe = Recipe::create([
             'title' => $request->title,
             'description' => $request->description,
-            'ingredients' => json_encode($request->ingredients),
-            'steps' => json_encode($request->steps),
+            'ingredients' => $request->ingredients,
+            'steps' => $request->steps,
+            'image' => $imagePath,
             'user_id' => Auth::id(),
         ]);
 
@@ -57,6 +71,10 @@ class RecipeController extends Controller
     {
         $recipe = Recipe::with('user:id,name')
             ->find($id);
+
+        $recipe->image_url = $recipe->image
+            ? asset('storage/' . $recipe->image)
+            : null;
 
         if (!$recipe) {
             return response()->json([
@@ -83,7 +101,6 @@ class RecipeController extends Controller
             ], 404);
         }
 
-        // Cek kepemilikan resep
         if ($recipe->user_id !== Auth::id()) {
             return response()->json([
                 'success' => false,
@@ -91,12 +108,12 @@ class RecipeController extends Controller
             ], 403);
         }
 
-        // Validasi
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'ingredients' => 'required|array|min:1',
             'steps' => 'required|array|min:1',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -107,18 +124,101 @@ class RecipeController extends Controller
             ], 422);
         }
 
-        // Update data
-        $recipe->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'ingredients' => json_encode($request->ingredients),
-            'steps' => json_encode($request->steps),
-        ]);
+        // 🔄 Update data utama
+        $recipe->title = $request->title;
+        $recipe->description = $request->description;
+        $recipe->ingredients = json_encode($request->ingredients);
+        $recipe->steps = json_encode($request->steps);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('recipes', 'public');
+            $recipe->image = $imagePath;
+        }
+
+        // $recipe->update([
+        //     'title' => $request->title,
+        //     'description' => $request->description,
+        //     'ingredients' => json_encode($request->ingredients),
+        //     'steps' => json_encode($request->steps),
+        // ]);
+
+        $recipe->save();
 
         return response()->json([
             'success' => true,
             'message' => 'Resep berhasil diperbarui',
             'data' => $recipe
         ], 200);
+
+        if ($request->hasFile('image')) {
+        // hapus foto lama jika ada
+            if ($recipe->image && Storage::disk('public')->exists($recipe->image)) {
+                Storage::disk('public')->delete($recipe->image);
+            }
+
+            $recipe->image = $request->file('image')->store('recipes', 'public');
+            $recipe->image = $imagePath;
+        }
+
+    }
+
+    public function destroy($id)
+    {
+        $recipe = Recipe::find($id);
+
+        if (!$recipe) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Resep tidak ditemukan'
+            ], 404);
+        }
+
+        if ($recipe->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak berhak menghapus resep ini'
+            ], 403);
+        }
+
+        if ($recipe->image && Storage::disk('public')->exists($recipe->image)) {
+            Storage::disk('public')->delete($recipe->image);
+        }
+
+        $recipe->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Resep berhasil dihapus'
+        ], 200);
+    }
+
+    public function deletePhoto($id)
+    {
+        $recipe = Recipe::find($id);
+
+        if (!$recipe) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Resep tidak ditemukan'
+            ], 404);
+        }
+
+        if ($recipe->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak diizinkan'
+            ], 403);
+        }
+
+        if ($recipe->image && Storage::disk('public')->exists($recipe->image)) {
+            Storage::disk('public')->delete($recipe->image);
+            $recipe->image = null;
+            $recipe->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Foto resep berhasil dihapus'
+        ]);
     }
 }
