@@ -4,10 +4,8 @@ import 'package:app_resepku/data/usecase/request/register_request.dart';
 import 'package:app_resepku/data/usecase/response/login_response.dart';
 import 'package:app_resepku/data/usecase/response/register_response.dart';
 
-class AuthRepository {
-  final HttpService httpService;
-
-  AuthRepository(this.httpService);
+class UserRepository {
+  final HttpService httpService = HttpService();
 
   Future<LoginResponse> login(LoginRequest request) async {
     final response = await httpService.post('login', request.toMap());

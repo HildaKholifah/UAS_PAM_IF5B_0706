@@ -6,10 +6,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class HttpService {
-  final String baseUrl = "http://10.72.255.207:8000/api/";
-  // diganti 10.0.2.2 (api emulator),
-  // kalo menggunakan device asli ganti ke ip komputer lokal dan memakai wifi yang sama
-  // gunakan IPv4 Address: (cara cek nya ipconfig)
+  final String baseUrl = "http://192.168.18.159:8000/api/";
+  // Menggunakan adb reverse - emulator ke host machine
+  // Jalankan: adb reverse tcp:8000 tcp:8000
 
   Future<http.Response> get(String endpoint) async {
     final url = Uri.parse('$baseUrl$endpoint');
@@ -47,14 +46,14 @@ class HttpService {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
             },
-            body: json.encode(body),
+            body: jsonEncode(body),
           )
           .timeout(
             const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException(
-              'Request timeout after 10 seconds',
-              const Duration(seconds: 10),
-            ),
+            // onTimeout: () => throw TimeoutException(
+            //   'Request timeout after 10 seconds',
+            //   const Duration(seconds: 10),
+            // ),
           );
       log('POST Response: ${response.body}');
       return response;
