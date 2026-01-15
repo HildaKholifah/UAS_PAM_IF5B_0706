@@ -46,13 +46,6 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.green,
           ),
         );
-
-        /// RESET FORM (seperti restart halaman)
-        // _formKey.currentState!.reset();
-        // _emailController.clear();
-        // _passwordController.clear();
-
-        /// ATAU pindah halaman (contoh)
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => LoginPage()),

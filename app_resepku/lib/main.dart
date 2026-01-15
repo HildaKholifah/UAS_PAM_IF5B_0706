@@ -1,4 +1,5 @@
 import 'package:app_resepku/presentation/login_page.dart';
+import 'package:app_resepku/presentation/register_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: LoginPage()
+      home: RegisterPage(),
     );
   }
 }
