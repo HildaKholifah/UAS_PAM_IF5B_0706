@@ -19,9 +19,9 @@ class LoginResponse {
       LoginResponse.fromMap(json.decode(str));
 
   factory LoginResponse.fromMap(Map<String, dynamic> json) => LoginResponse(
-        status: json["status"],
-        message: json["message"],
-        token: json["token"],
-        user: User.fromMap(json["user"]),
-      );
+    status: json["status"],
+    message: json["message"],
+    token: json["token"],
+    user: User.fromMap(json["user"]),
+  );
 }
