@@ -1,6 +1,7 @@
 import 'package:app_resepku/data/repository/user_repository.dart';
 import 'package:app_resepku/data/usecase/request/login_request.dart';
 import 'package:app_resepku/presentation/register_page.dart';
+import 'package:app_resepku/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -30,8 +31,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (_) => LoginPage(),
-            // builder: (_) => HomePage(username: username),
+            builder: (_) => HomePage("", username: "User"),
           ),
           (_) => false,
         );
@@ -212,7 +212,10 @@ class _RegisterRedirect extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Belum punya akun? ", style: TextStyle(color: Colors.black87)),
+        const Text(
+          "Belum punya akun? ",
+          style: TextStyle(color: Colors.black87),
+        ),
         GestureDetector(
           onTap: () {
             Navigator.push(
@@ -222,7 +225,7 @@ class _RegisterRedirect extends StatelessWidget {
           },
           child: const Text(
             "Daftar di sini",
-            style: TextStyle(color: Color(0xFFB8792F), fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
           ),
         ),
       ],

@@ -26,9 +26,20 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: AppBar(
         backgroundColor: Color(0xFFB8792F),
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset('assets/Logo_ResepKu.png'),
+        leadingWidth: 120,
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
+            Image.asset(
+              'assets/Logo_ResepKu.png',
+              width: 60,
+              fit: BoxFit.contain,
+            ),
+          ],
         ),
         title: const Text(
           'Register',
@@ -39,12 +50,6 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

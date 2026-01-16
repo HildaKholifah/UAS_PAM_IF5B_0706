@@ -1,6 +1,5 @@
 import 'package:app_resepku/data/service/token_storage.dart';
 import 'package:app_resepku/presentation/login_page.dart';
-import 'package:app_resepku/presentation/register_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
