@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             );
           }
 
-          return snapshot.data! ? const RegisterPage() : const LoginPage();
+          return snapshot.data! ? const LoginPage() : const LoginPage();
         },
       ),
     );

@@ -3,9 +3,6 @@ import 'package:app_resepku/data/usecase/request/login_request.dart';
 import 'package:app_resepku/presentation/register_page.dart';
 import 'package:flutter/material.dart';
 
-const Color primaryBrown = Color(0xFFB8792F);
-const Color darkBrown = Color(0xFF8A5A20);
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -74,31 +71,22 @@ class _LoginPageState extends State<LoginPage> {
 
   // Card
   Widget _LoginCard() {
-    return Container(
-      // padding: const EdgeInsets.all(20),
-      // decoration: BoxDecoration(
-      //   borderRadius: BorderRadius.circular(16),
-      //   boxShadow: const [
-      //     BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 4)),
-      //   ],
-      // ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            _EmailField(controller: _emailCtr),
-            const SizedBox(height: 16),
-            _PasswordField(
-              controller: _passCtr,
-              obscure: _obscure,
-              onToggle: () => setState(() => _obscure = !_obscure),
-            ),
-            const SizedBox(height: 24),
-            _SubmitButton(onPressed: _submit),
-            const SizedBox(height: 16),
-            _RegisterRedirect(),
-          ],
-        ),
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          _EmailField(controller: _emailCtr),
+          const SizedBox(height: 16),
+          _PasswordField(
+            controller: _passCtr,
+            obscure: _obscure,
+            onToggle: () => setState(() => _obscure = !_obscure),
+          ),
+          const SizedBox(height: 24),
+          _SubmitButton(onPressed: _submit),
+          const SizedBox(height: 16),
+          _RegisterRedirect(),
+        ],
       ),
     );
   }
@@ -127,7 +115,7 @@ class _WelcomeText extends StatelessWidget {
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: primaryBrown,
+            color: Color(0xFFB8792F),
           ),
         ),
         SizedBox(height: 8),
@@ -200,7 +188,7 @@ class _SubmitButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBrown,
+          backgroundColor: Color(0xFFB8792F),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -224,7 +212,7 @@ class _RegisterRedirect extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Belum punya akun? ", style: TextStyle(color: Colors.white)),
+        const Text("Belum punya akun? ", style: TextStyle(color: Colors.black87)),
         GestureDetector(
           onTap: () {
             Navigator.push(
@@ -234,7 +222,7 @@ class _RegisterRedirect extends StatelessWidget {
           },
           child: const Text(
             "Daftar di sini",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Color(0xFFB8792F), fontWeight: FontWeight.bold),
           ),
         ),
       ],
