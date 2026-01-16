@@ -4,126 +4,103 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'token_storage.dart';
 
 class HttpService {
   final String baseUrl = "http://192.168.18.159:8000/api/";
   // Menggunakan adb reverse - emulator ke host machine
   // Jalankan: adb reverse tcp:8000 tcp:8000
 
+  final tokenStorage = TokenStorage();
+
+  Future<Map<String, String>> _headers() async {
+    final token = await tokenStorage.getToken();
+
+    return {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+
   Future<http.Response> get(String endpoint) async {
     final url = Uri.parse('$baseUrl$endpoint');
-    try {
-      final response = await http
-          .get(
-            url,
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-          )
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException(
-              'Request timeout after 10 seconds',
-              const Duration(seconds: 10),
-            ),
-          );
-      log('GET Response: ${response.body}');
-      return response;
-    } on TimeoutException {
-      log('GET timeout for endpoint: $endpoint');
-      rethrow;
-    }
+    final headers = await _headers();
+
+    final response = await http
+        .get(url, headers: headers)
+        .timeout(const Duration(seconds: 10));
+
+    log('GET $endpoint => ${response.statusCode}');
+    log(response.body);
+    return response;
   }
 
   Future<http.Response> post(String endpoint, Map<String, dynamic> body) async {
     final url = Uri.parse('$baseUrl$endpoint');
-    try {
-      final response = await http
-          .post(
-            url,
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode(body),
-          )
-          .timeout(
-            const Duration(seconds: 10),
-            // onTimeout: () => throw TimeoutException(
-            //   'Request timeout after 10 seconds',
-            //   const Duration(seconds: 10),
-            // ),
-          );
-      log('POST Response: ${response.body}');
-      return response;
-    } on TimeoutException {
-      log('POST timeout for endpoint: $endpoint');
-      rethrow;
-    }
+    final headers = await _headers();
+
+    final response = await http
+        .post(url, headers: headers, body: jsonEncode(body))
+        .timeout(const Duration(seconds: 10));
+
+    log('POST $endpoint => ${response.statusCode}');
+    log(response.body);
+    return response;
   }
 
   Future<http.Response> postWithFile(
-    String endPoint,
+    String endpoint,
     Map<String, String> fields,
     File? file,
     String fileFieldName,
   ) async {
-    try {
-      final url = Uri.parse('$baseUrl$endPoint');
-      final request = http.MultipartRequest('POST', url);
+    final url = Uri.parse('$baseUrl$endpoint');
+    final request = http.MultipartRequest('POST', url);
 
-      // Add fields
-      request.fields.addAll(fields);
-
-      // Add file if available
-      if (file != null) {
-        final imageFile = await http.MultipartFile.fromPath(
-          fileFieldName,
-          file.path,
-        );
-        request.files.add(imageFile);
-        log('File added: ${file.path}');
-      }
-
-      log('POST with File to: $url');
-      log('Fields: ${request.fields}');
-      log('Files: ${request.files.length}');
-
-      // Send request
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-      log('POST with File Response: ${response.statusCode} - ${response.body}');
-      return response;
-    } catch (e) {
-      log('Error in postWithFile: $e');
-      rethrow;
+    // 🔐 AUTH HEADER
+    final token = await tokenStorage.getToken();
+    if (token != null) {
+      request.headers['Authorization'] = 'Bearer $token';
     }
-  }
 
-  Future<http.Response> put(String endPoint, Map<String, dynamic> body) async {
-    final url = Uri.parse('$baseUrl$endPoint');
-    final response = await http.put(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: jsonEncode(body),
-    );
-    log('PUT Response: ${response.body}');
+    request.fields.addAll(fields);
+
+    if (file != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath(fileFieldName, file.path),
+      );
+    }
+
+    final streamed = await request.send();
+    final response = await http.Response.fromStream(streamed);
+
+    log('POST FILE $endpoint => ${response.statusCode}');
+    log(response.body);
     return response;
   }
 
-  Future<http.Response> delete(String endPoint) async {
-    final url = Uri.parse('$baseUrl$endPoint');
-    final response = await http.delete(
+
+  Future<http.Response> put(String endpoint, Map<String, dynamic> body) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    final headers = await _headers();
+
+    final response = await http.put(
       url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
+      headers: headers,
+      body: jsonEncode(body),
     );
+
+    log('PUT $endpoint => ${response.statusCode}');
+    return response;
+  }
+
+  Future<http.Response> delete(String endpoint) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    final headers = await _headers();
+
+    final response = await http.delete(url, headers: headers);
+    log('DELETE $endpoint => ${response.statusCode}');
     return response;
   }
 }

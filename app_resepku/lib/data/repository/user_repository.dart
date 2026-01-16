@@ -1,4 +1,5 @@
 import 'package:app_resepku/data/service/http_service.dart';
+import 'package:app_resepku/data/service/token_storage.dart';
 import 'package:app_resepku/data/usecase/request/login_request.dart';
 import 'package:app_resepku/data/usecase/request/register_request.dart';
 import 'package:app_resepku/data/usecase/response/login_response.dart';
@@ -6,11 +7,19 @@ import 'package:app_resepku/data/usecase/response/register_response.dart';
 
 class UserRepository {
   final HttpService httpService = HttpService();
+  final TokenStorage tokenStorage = TokenStorage();
 
   Future<LoginResponse> login(LoginRequest request) async {
     final response = await httpService.post('login', request.toMap());
 
-    return LoginResponse.fromJson(response.body);
+    final loginResponse = LoginResponse.fromJson(response.body);
+
+    // ✅ SIMPAN TOKEN JIKA LOGIN BERHASIL
+    if (loginResponse.status == 'success' && loginResponse.token.isNotEmpty) {
+      await tokenStorage.saveToken(loginResponse.token);
+    }
+
+    return loginResponse;
   }
 
   Future<RegisterResponse> register(RegisterRequest request) async {

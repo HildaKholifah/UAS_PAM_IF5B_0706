@@ -1,4 +1,5 @@
 import 'package:app_resepku/data/repository/user_repository.dart';
+import 'package:app_resepku/data/service/token_storage.dart';
 import 'package:app_resepku/data/usecase/request/login_request.dart';
 import 'package:flutter/material.dart';
 
@@ -40,6 +41,9 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (response.status == "success") {
+        final token = await TokenStorage().getToken();
+        print('TOKEN SETELAH LOGIN: $token');
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(response.message),
