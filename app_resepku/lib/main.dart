@@ -23,11 +23,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      routes: {
-        '/login': (_) => const LoginPage(),
-        '/register': (_) => const RegisterPage(),
-        // '/home': (_) => const HomePage(),
-      },
       home: FutureBuilder<bool>(
         future: isLogin(),
         builder: (context, snapshot) {

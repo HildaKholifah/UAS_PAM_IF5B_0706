@@ -36,3 +36,10 @@ Route::middleware('auth:sanctum')->delete(
     '/recipes/{id}/image', 
     [RecipeController::class, 'deletePhoto']
 );
+
+Route::get('/ping', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'API OK'
+    ]);
+});

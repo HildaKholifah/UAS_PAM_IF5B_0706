@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'token_storage.dart';
 
 class HttpService {
-  final String baseUrl = "http://192.168.18.159:8000/api/";
+  final String baseUrl = "http://192.168.100.56:8000/api/";
   // Menggunakan adb reverse - emulator ke host machine
   // Jalankan: adb reverse tcp:8000 tcp:8000
 
@@ -59,10 +59,10 @@ class HttpService {
     final request = http.MultipartRequest('POST', url);
 
     // 🔐 AUTH HEADER
-    final token = await tokenStorage.getToken();
-    if (token != null) {
-      request.headers['Authorization'] = 'Bearer $token';
-    }
+    // final token = await tokenStorage.getToken();
+    // if (token != null) {
+    //   request.headers['Authorization'] = 'Bearer $token';
+    // }
 
     request.fields.addAll(fields);
 

@@ -1,7 +1,10 @@
 import 'package:app_resepku/data/repository/user_repository.dart';
-import 'package:app_resepku/data/service/token_storage.dart';
 import 'package:app_resepku/data/usecase/request/login_request.dart';
+import 'package:app_resepku/presentation/register_page.dart';
 import 'package:flutter/material.dart';
+
+const Color primaryBrown = Color(0xFFB8792F);
+const Color darkBrown = Color(0xFF8A5A20);
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,103 +15,245 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final _emailCtr = TextEditingController();
+  final _passCtr = TextEditingController();
+  final _repo = UserRepository();
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  final _userRepository = UserRepository();
-
-  bool _isLoading = false;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+  bool _obscure = true;
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
+    final response = await _repo.login(
+      LoginRequest(email: _emailCtr.text, password: _passCtr.text),
+    );
 
-    try {
-      final response = await _userRepository.login(
-        LoginRequest(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        ),
-      );
-
-      if (response.status == "success") {
-        final token = await TokenStorage().getToken();
-        print('TOKEN SETELAH LOGIN: $token');
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response.message),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pushReplacement(
+    if (response.status == 'success') {
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (_) => LoginPage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response.message),
-            backgroundColor: Colors.red,
+          MaterialPageRoute(
+            builder: (_) => LoginPage(),
+            // builder: (_) => HomePage(username: username),
           ),
+          (_) => false,
         );
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Terjadi kesalahan: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      setState(() => _isLoading = false);
+    } else {
+      _showMessage("Email atau password salah", Colors.red);
     }
+  }
+
+  void _showMessage(String msg, Color color) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(msg), backgroundColor: color));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Email wajib diisi' : null,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Password wajib diisi' : null,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _submit,
-                child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Login'),
-              ),
+              const SizedBox(height: 40),
+              const _LogoSection(),
+              const SizedBox(height: 20),
+              const _WelcomeText(),
+              const SizedBox(height: 40),
+              _LoginCard(),
             ],
           ),
         ),
       ),
     );
   }
+
+  // Card
+  Widget _LoginCard() {
+    return Container(
+      // padding: const EdgeInsets.all(20),
+      // decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(16),
+      //   boxShadow: const [
+      //     BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 4)),
+      //   ],
+      // ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            _EmailField(controller: _emailCtr),
+            const SizedBox(height: 16),
+            _PasswordField(
+              controller: _passCtr,
+              obscure: _obscure,
+              onToggle: () => setState(() => _obscure = !_obscure),
+            ),
+            const SizedBox(height: 24),
+            _SubmitButton(onPressed: _submit),
+            const SizedBox(height: 16),
+            _RegisterRedirect(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Logo
+class _LogoSection extends StatelessWidget {
+  const _LogoSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset('assets/Logo_ResepKu.png', width: 220);
+  }
+}
+
+// Text
+class _WelcomeText extends StatelessWidget {
+  const _WelcomeText();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: const [
+        Text(
+          "Selamat Datang di ResepKu!",
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: primaryBrown,
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          "Silakan login untuk melanjutkan ke aplikasi ResepKu.",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.black54),
+        ),
+      ],
+    );
+  }
+}
+
+// Field
+class _EmailField extends StatelessWidget {
+  final TextEditingController controller;
+  const _EmailField({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: TextInputType.emailAddress,
+      validator: (v) =>
+          v == null || !v.contains('@') ? 'Email tidak valid' : null,
+      decoration: _inputDecoration(label: "Email", icon: Icons.email_outlined),
+    );
+  }
+}
+
+class _PasswordField extends StatelessWidget {
+  final TextEditingController controller;
+  final bool obscure;
+  final VoidCallback onToggle;
+
+  const _PasswordField({
+    required this.controller,
+    required this.obscure,
+    required this.onToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscure,
+      validator: (v) => v == null || v.length < 8 ? 'Minimal 8 karakter' : null,
+      decoration: _inputDecoration(
+        label: "Password",
+        icon: Icons.lock_outline,
+        suffix: IconButton(
+          icon: Icon(obscure ? Icons.visibility_off : Icons.visibility),
+          onPressed: onToggle,
+        ),
+      ),
+    );
+  }
+}
+
+// Button
+class _SubmitButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  const _SubmitButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryBrown,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: const Text(
+          "SUBMIT",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+}
+
+// Register
+class _RegisterRedirect extends StatelessWidget {
+  const _RegisterRedirect();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Belum punya akun? ", style: TextStyle(color: Colors.white)),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => RegisterPage()),
+            );
+          },
+          child: const Text(
+            "Daftar di sini",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Decoration
+InputDecoration _inputDecoration({
+  required String label,
+  required IconData icon,
+  Widget? suffix,
+}) {
+  return InputDecoration(
+    labelText: label,
+    prefixIcon: Icon(icon),
+    suffixIcon: suffix,
+    filled: true,
+    fillColor: Colors.white,
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+  );
 }

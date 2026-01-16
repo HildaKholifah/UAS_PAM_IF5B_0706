@@ -21,14 +21,15 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $validated->name,
-            'email' => $validated->email,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Register berhasil',
             'token' => $token,
             'user' => $user,
@@ -45,6 +46,7 @@ class AuthController extends Controller
 
         if (!Auth::attempt($validated)) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Email atau password salah'
             ], 401);
         }
@@ -53,6 +55,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Login berhasil',
             'token' => $token,
             'user' => $user
@@ -65,6 +68,7 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Logout berhasil'
         ], 200);
     }
