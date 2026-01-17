@@ -7,6 +7,7 @@ class Recipe {
   final String? imageUrl;
   final List<String> ingredients;
   final List<String> steps;
+  final int userId;
 
   Recipe({
     required this.id,
@@ -15,6 +16,7 @@ class Recipe {
     this.imageUrl,
     required this.ingredients,
     required this.steps,
+    required this.userId,
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
@@ -23,7 +25,9 @@ class Recipe {
     if (map['ingredients'] != null) {
       if (map['ingredients'] is String) {
         // Jika String, parse sebagai JSON array
-        ingredientsList = List<String>.from(jsonDecode(map['ingredients']) ?? []);
+        ingredientsList = List<String>.from(
+          jsonDecode(map['ingredients']) ?? [],
+        );
       } else if (map['ingredients'] is List) {
         // Jika sudah List
         ingredientsList = List<String>.from(map['ingredients']);
@@ -49,6 +53,7 @@ class Recipe {
       imageUrl: map['image_url'],
       ingredients: ingredientsList,
       steps: stepsList,
+      userId: map['user_id'] ?? 0,
     );
   }
 }

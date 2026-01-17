@@ -107,17 +107,14 @@ class _RegisterPageState extends State<RegisterPage> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.message ?? "Registrasi gagal"),
+              content: Text(response.message),
               backgroundColor: Colors.red,
             ),
           );
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Error: $e"),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
         );
       }
     }

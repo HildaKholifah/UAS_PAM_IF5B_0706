@@ -1,4 +1,5 @@
 import 'package:app_resepku/presentation/detail_resep_page.dart';
+import 'package:app_resepku/presentation/resep_saya_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app_resepku/data/model/recipe.dart';
 import 'package:app_resepku/data/repository/recipe_repository.dart';
@@ -271,10 +272,20 @@ class _HomePageState extends State<HomePage> {
   BottomNavigationBar _buildBottomNav() {
     return BottomNavigationBar(
       currentIndex: _selectedIndex,
-      onTap: (index) => setState(() => _selectedIndex = index),
       selectedItemColor: primaryBrown,
       unselectedItemColor: Colors.grey,
       type: BottomNavigationBarType.fixed,
+      onTap: (index) {
+        setState(() => _selectedIndex = index);
+        if (index == 1) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ResepSayaPage(username: widget.username),
+            ),
+          );
+        }
+      },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.book), label: "Resep Saya"),
