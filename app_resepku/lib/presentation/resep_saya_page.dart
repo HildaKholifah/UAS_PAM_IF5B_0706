@@ -1,4 +1,5 @@
 import 'package:app_resepku/presentation/home_page.dart';
+import 'package:app_resepku/presentation/profil_page.dart';
 import 'package:app_resepku/presentation/tambah_resep_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app_resepku/data/model/recipe.dart';
@@ -20,7 +21,7 @@ class _MyRecipePageState extends State<ResepSayaPage> {
   bool _isLoading = true;
   List<Recipe> _recipes = [];
 
-  int _selectedIndex = 1;
+  final int _selectedIndex = 1;
   static const primaryBrown = Color(0xFF6B3E26);
 
   @override
@@ -185,11 +186,14 @@ class _MyRecipePageState extends State<ResepSayaPage> {
         }
 
         if (index == 2) {
-          // NANTI: RatingPage
+          // RatingPage
         }
 
         if (index == 3) {
-          // NANTI: ProfilePage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => ProfilPage()),
+          );
         }
       },
       items: const [

@@ -1,4 +1,3 @@
-import 'package:app_resepku/data/model/user.dart';
 import 'package:app_resepku/data/service/http_service.dart';
 import 'package:app_resepku/data/service/token_storage.dart';
 import 'package:app_resepku/data/usecase/request/login_request.dart';
@@ -30,7 +29,7 @@ class UserRepository {
   }
 
   // Future<User> getProfile() async {
-  //   final res = await httpService.get('user'); 
+  //   final res = await httpService.get('user');
   //   if (res.statusCode == 200) {
   //     final data = json.decode(res.body);
   //     final map = data['data'] ?? data;
@@ -42,7 +41,7 @@ class UserRepository {
 
   Future<void> logout() async {
     try {
-      await httpService.post('logout', {}); 
+      await httpService.post('logout', {});
     } catch (_) {}
     await tokenStorage.clearToken();
   }

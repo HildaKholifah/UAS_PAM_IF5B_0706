@@ -1,4 +1,5 @@
 import 'package:app_resepku/presentation/detail_resep_page.dart';
+import 'package:app_resepku/presentation/profil_page.dart';
 import 'package:app_resepku/presentation/resep_saya_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app_resepku/data/model/recipe.dart';
@@ -285,7 +286,15 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         }
+
+        if (index == 3) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => ProfilPage()),
+          );
+        }
       },
+      
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.book), label: "Resep Saya"),

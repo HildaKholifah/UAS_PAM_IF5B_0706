@@ -15,6 +15,7 @@ class HttpService {
 
   Future<Map<String, String>> _headers() async {
     final token = await tokenStorage.getToken();
+    print("TOKEN DI HEADER: $token");
 
     return {
       'Accept': 'application/json',
