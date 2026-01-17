@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:app_resepku/data/model/user.dart';
 import 'package:app_resepku/data/service/http_service.dart';
 
-class ProfileRepository {
+class ProfilRepository {
   final HttpService httpService = HttpService();
 
   Future<User> getProfile() async {
