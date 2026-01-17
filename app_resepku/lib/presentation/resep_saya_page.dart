@@ -1,4 +1,5 @@
 import 'package:app_resepku/presentation/home_page.dart';
+import 'package:app_resepku/presentation/tambah_resep_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app_resepku/data/model/recipe.dart';
 import 'package:app_resepku/data/repository/recipe_repository.dart';
@@ -56,7 +57,7 @@ class _MyRecipePageState extends State<ResepSayaPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => const HomePage(username: 'Hilda'),
+              builder: (_) => TambahResepPage(username: widget.username),
             ),
           );
         },

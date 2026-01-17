@@ -1,3 +1,4 @@
+import 'package:app_resepku/data/model/user.dart';
 import 'package:app_resepku/data/service/http_service.dart';
 import 'package:app_resepku/data/service/token_storage.dart';
 import 'package:app_resepku/data/usecase/request/login_request.dart';
@@ -26,5 +27,23 @@ class UserRepository {
     final response = await httpService.post('register', request.toMap());
 
     return RegisterResponse.fromJson(response.body);
+  }
+
+  // Future<User> getProfile() async {
+  //   final res = await httpService.get('user'); 
+  //   if (res.statusCode == 200) {
+  //     final data = json.decode(res.body);
+  //     final map = data['data'] ?? data;
+  //     return User.fromMap(map);
+  //   } else {
+  //     throw Exception('Gagal mengambil profil');
+  //   }
+  // }
+
+  Future<void> logout() async {
+    try {
+      await httpService.post('logout', {}); 
+    } catch (_) {}
+    await tokenStorage.clearToken();
   }
 }
