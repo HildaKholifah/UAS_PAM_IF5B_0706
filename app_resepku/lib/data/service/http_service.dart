@@ -24,16 +24,21 @@ class HttpService {
   }
 
   Future<http.Response> get(String endpoint) async {
-    final url = Uri.parse('$baseUrl$endpoint');
-    final headers = await _headers();
+    try {
+      final url = Uri.parse('$baseUrl$endpoint');
+      final headers = await _headers();
 
-    final response = await http
-        .get(url, headers: headers)
-        .timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(url, headers: headers)
+          .timeout(const Duration(seconds: 30));
 
-    log('GET $endpoint => ${response.statusCode}');
-    log(response.body);
-    return response;
+      log('GET $endpoint => ${response.statusCode}');
+      log(response.body);
+      return response;
+    } on TimeoutException catch (e) {
+      log('❌ Timeout on GET $endpoint: $e');
+      rethrow;
+    }
   }
 
   Future<http.Response> post(String endpoint, Map<String, dynamic> body) async {
@@ -42,7 +47,7 @@ class HttpService {
 
     final response = await http
         .post(url, headers: headers, body: jsonEncode(body))
-        .timeout(const Duration(seconds: 30));
+        .timeout(const Duration(seconds: 60));
 
     log('POST $endpoint => ${response.statusCode}');
     log(response.body);

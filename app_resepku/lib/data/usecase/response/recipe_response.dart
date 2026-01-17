@@ -12,10 +12,15 @@ class RecipeResponse {
   });
 
   factory RecipeResponse.fromMap(Map<String, dynamic> json) {
-    return RecipeResponse(
-      status: json['status'],
-      message: json['message'],
-      data: List<Recipe>.from(json['data'].map((e) => Recipe.fromMap(e))),
-    );
+    try {
+      return RecipeResponse(
+        status: json['status'] ?? 'unknown',
+        message: json['message'] ?? '',
+        data: List<Recipe>.from((json['data'] ?? []).map((e) => Recipe.fromMap(e as Map<String, dynamic>))),
+      );
+    } catch (e) {
+      print('❌ Error parsing RecipeResponse: $e');
+      rethrow;
+    }
   }
 }

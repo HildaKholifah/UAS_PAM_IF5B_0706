@@ -15,9 +15,11 @@ class RecipeController extends Controller
     {
         $recipes = Recipe::latest()->get();
 
-        $recipe->image_url = $recipe->image
-            ? asset('storage/' . $recipe->image)
-            : null;
+        foreach ($recipes as $recipe) {
+            $recipe->image_url = $recipe->image
+                ? asset('storage/' . $recipe->image)
+                : null;
+        }
 
         return response()->json([
             'success' => true,
