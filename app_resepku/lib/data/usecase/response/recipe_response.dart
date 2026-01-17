@@ -13,10 +13,19 @@ class RecipeResponse {
 
   factory RecipeResponse.fromMap(Map<String, dynamic> json) {
     try {
+      // API bisa kirim 'success' atau 'status', dan 'data' harus array
+      final data = json['data'];
+      
+      if (data is! List) {
+        throw Exception('Invalid data format: expected List, got ${data.runtimeType}');
+      }
+      
       return RecipeResponse(
-        status: json['status'] ?? 'unknown',
+        status: (json['success'] ?? json['status'] ?? false).toString(),
         message: json['message'] ?? '',
-        data: List<Recipe>.from((json['data'] ?? []).map((e) => Recipe.fromMap(e as Map<String, dynamic>))),
+        data: List<Recipe>.from(
+          data.map((e) => Recipe.fromMap(e as Map<String, dynamic>))
+        ),
       );
     } catch (e) {
       print('❌ Error parsing RecipeResponse: $e');

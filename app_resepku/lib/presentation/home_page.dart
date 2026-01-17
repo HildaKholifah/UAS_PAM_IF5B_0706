@@ -1,8 +1,9 @@
+import 'package:app_resepku/presentation/detail_resep_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app_resepku/data/model/recipe.dart';
 import 'package:app_resepku/data/repository/recipe_repository.dart';
 
-// VIEW MODEL
+// View Model
 class HomeViewModel extends ChangeNotifier {
   final RecipeRepository repository;
 
@@ -37,8 +38,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
   late HomeViewModel viewModel;
+  int _selectedIndex = 0;
+
+  final TextEditingController _searchController = TextEditingController();
+  List<Recipe> _filteredRecipes = [];
 
   static const primaryBrown = Color(0xFF6B3E26);
 
@@ -47,6 +51,23 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     viewModel = HomeViewModel(RecipeRepository());
     viewModel.fetchRecipes();
+
+    viewModel.addListener(() {
+      setState(() {
+        _filteredRecipes = viewModel.recipes;
+      });
+    });
+  }
+
+  void _onSearch(String query) {
+    setState(() {
+      _filteredRecipes = viewModel.recipes
+          .where(
+            (recipe) =>
+                recipe.title.toLowerCase().contains(query.toLowerCase()),
+          )
+          .toList();
+    });
   }
 
   @override
@@ -63,9 +84,9 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _greetingText(),
-                const SizedBox(height: 30),
-                _sectionTitle(),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
+                _searchBar(),
+                const SizedBox(height: 20),
                 Expanded(child: _buildContent()),
               ],
             );
@@ -76,7 +97,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // CONTENT STATE
+  // Content State
   Widget _buildContent() {
     if (viewModel.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -86,24 +107,30 @@ class _HomePageState extends State<HomePage> {
       return Center(child: Text(viewModel.errorMessage!));
     }
 
-    if (viewModel.recipes.isEmpty) {
-      return Center(
+    if (_filteredRecipes.isEmpty) {
+      return const Center(
         child: Text(
-          "Belum ada resep tersedia",
-          style: TextStyle(color: Colors.grey.shade600),
+          "Resep tidak ditemukan",
+          style: TextStyle(color: Colors.grey),
         ),
       );
     }
 
-    return ListView.builder(
-      itemCount: viewModel.recipes.length,
+    return GridView.builder(
+      itemCount: _filteredRecipes.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 3 / 4,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
       itemBuilder: (context, index) {
-        return _recipeCard(viewModel.recipes[index]);
+        return _recipeCard(_filteredRecipes[index]);
       },
     );
   }
 
-  // UI COMPONENTS
+  // UI Components
   AppBar _buildAppBar() {
     return AppBar(
       backgroundColor: const Color(0xFFB8792F),
@@ -127,76 +154,117 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _greetingText() {
-    return Text(
-      "Halo, ${widget.username} 👋",
-      style: const TextStyle(
-        fontSize: 26,
-        fontWeight: FontWeight.bold,
-        color: primaryBrown,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Halo, ${widget.username} 👋",
+          style: const TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 0.5,
+            color: primaryBrown,
+          ),
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          "Temukan resep untuk anda recook.",
+          style: TextStyle(fontSize: 16, color: Colors.black54),
+        ),
+      ],
     );
   }
 
-  Widget _sectionTitle() {
-    return const Text(
-      "Rekomendasi Resep",
-      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+  Widget _searchBar() {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _searchController,
+            onChanged: _onSearch,
+            decoration: InputDecoration(
+              hintText: "Cari resep...",
+              prefixIcon: const Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Container(
+          height: 52,
+          width: 52,
+          decoration: BoxDecoration(
+            color: primaryBrown,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Icon(Icons.search, color: Colors.white),
+        ),
+      ],
     );
   }
 
   Widget _recipeCard(Recipe recipe) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (recipe.imageUrl?.isNotEmpty == true)
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-              child: Image.network(
-                recipe.imageUrl!,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => _imageError(),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => DetailRecipePage(recipe: recipe)),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
+                child: recipe.imageUrl?.isNotEmpty == true
+                    ? Image.network(
+                        recipe.imageUrl!,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => _imageError(),
+                      )
+                    : _imageError(),
               ),
             ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  recipe.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: primaryBrown,
-                  ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                recipe.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  recipe.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _imageError() {
     return Container(
-      height: 200,
       color: Colors.grey.shade300,
-      child: const Icon(Icons.image_not_supported),
+      child: const Center(child: Icon(Icons.fastfood, size: 40)),
     );
   }
 
@@ -209,8 +277,8 @@ class _HomePageState extends State<HomePage> {
       type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
         BottomNavigationBarItem(icon: Icon(Icons.book), label: "Resep Saya"),
+        BottomNavigationBarItem(icon: Icon(Icons.star), label: "Rating"),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
       ],
     );

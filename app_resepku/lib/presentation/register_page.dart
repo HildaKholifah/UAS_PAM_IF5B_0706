@@ -81,31 +81,41 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
-      final response = await _repository.register(
-        RegisterRequest(
-          name: _usernameCtr.text,
-          email: _emailCtr.text,
-          password: _passwordCtr.text,
-          passwordConfirmation: _passwordCtr.text,
-        ),
-      );
-
-      if (response.success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Registrasi berhasil, silakan login"),
-            backgroundColor: Colors.green,
+      try {
+        final response = await _repository.register(
+          RegisterRequest(
+            name: _usernameCtr.text,
+            email: _emailCtr.text,
+            password: _passwordCtr.text,
+            passwordConfirmation: _passwordCtr.text,
           ),
         );
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginPage()),
-        );
-      } else {
+        if (response.success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Registrasi berhasil, silakan login"),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Navigator.pushReplacement - tidak bisa kembali ke register
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginPage()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response.message ?? "Registrasi gagal"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Registrasi gagal"),
+          SnackBar(
+            content: Text("Error: $e"),
             backgroundColor: Colors.red,
           ),
         );
