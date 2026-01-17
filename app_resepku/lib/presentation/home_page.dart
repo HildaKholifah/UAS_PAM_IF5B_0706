@@ -86,9 +86,9 @@ class _HomePageState extends State<HomePage> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
           BottomNavigationBarItem(icon: Icon(Icons.book), label: "Resep Saya"),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: "Penilaian"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Akun"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
         ],
       ),
     );

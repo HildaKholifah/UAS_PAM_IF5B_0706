@@ -42,7 +42,7 @@ class HttpService {
 
     final response = await http
         .post(url, headers: headers, body: jsonEncode(body))
-        .timeout(const Duration(seconds: 10));
+        .timeout(const Duration(seconds: 30));
 
     log('POST $endpoint => ${response.statusCode}');
     log(response.body);
@@ -79,7 +79,6 @@ class HttpService {
     log(response.body);
     return response;
   }
-
 
   Future<http.Response> put(String endpoint, Map<String, dynamic> body) async {
     final url = Uri.parse('$baseUrl$endpoint');
