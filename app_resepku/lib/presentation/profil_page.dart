@@ -58,21 +58,21 @@ class _ProfilPageState extends State<ProfilPage> {
 
   // Navigasi tab
   void _onNavTap(int index) {
-    if (index == _selectedIndex) return;
+    // if (index == _selectedIndex) return;
 
-    if (index == 0) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomePage(username: 'User')),
-      );
-    } else if (index == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => const ResepSayaPage(username: 'User'),
-        ),
-      );
-    }
+    // if (index == 0) {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(builder: (_) => const HomePage(username: 'User')),
+    //   );
+    // } else if (index == 1) {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (_) => const ResepSayaPage(username: 'User'),
+    //     ),
+    //   );
+    // }
 
     setState(() => _selectedIndex = index);
   }
@@ -83,12 +83,17 @@ class _ProfilPageState extends State<ProfilPage> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: const Color(0xFFB8792F),
-        centerTitle: true, // ini
+        centerTitle: true, 
         title: const Text(
           "Profil",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        leading: const BackButton(),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: FutureBuilder<User>(
         future: _profileFuture,
