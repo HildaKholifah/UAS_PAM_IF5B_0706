@@ -71,11 +71,22 @@ class RecipeController extends Controller
 
     public function myRecipes(Request $request)
     {
+        $recipes = Recipe::where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
+
+        foreach ($recipes as $recipe) {
+            $recipe->image_url = $recipe->image
+                ? asset('storage/' . $recipe->image)
+                : null;
+        }
+
         return response()->json([
             'success' => true,
-            'data' => Recipe::where('user_id', $request->user()->id)->get()
-        ]);
+            'data' => $recipes
+        ], 200);
     }
+
 
     public function show($id)
     {

@@ -51,16 +51,19 @@ class _MyRecipePageState extends State<ResepSayaPage> {
       backgroundColor: Colors.grey.shade100,
       appBar: _buildAppBar(),
       body: _buildContent(),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         backgroundColor: primaryBrown,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
+        icon: const Icon(Icons.add),
+        label: const Text("Tambah Resep"),
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => TambahResepPage(),
-            ),
+            MaterialPageRoute(builder: (_) => const TambahResepPage()),
           );
+
+          if (result == true) {
+            _loadMyRecipes(); // Refresh
+          }
         },
       ),
       bottomNavigationBar: _buildBottomNav(),

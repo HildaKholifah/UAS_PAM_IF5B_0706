@@ -22,6 +22,7 @@ class Recipe {
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
+    // Ingredients
     // Parse ingredients - bisa jadi String atau sudah List
     List<String> ingredientsList = [];
     if (map['ingredients'] != null) {
@@ -36,6 +37,7 @@ class Recipe {
       }
     }
 
+    // Steps
     // Parse steps - bisa jadi String atau sudah List
     List<String> stepsList = [];
     if (map['steps'] != null) {
@@ -52,10 +54,11 @@ class Recipe {
       id: map['id'],
       title: map['title'] ?? '',
       description: map['description'] ?? '',
-      // imageUrl: map['image_url'],
       ingredients: ingredientsList,
       steps: stepsList,
+      imageUrl: map['image_url'],
       userId: map['user_id'] ?? 0,
+      username: map['user']?['name'],
     );
   }
 }

@@ -26,18 +26,18 @@ class RecipeRepository {
 
   // Ambil resep user login
   Future<List<Recipe>> getMyRecipes() async {
-    try {
-      final response = await httpService.get('recipes/my');
-      final decoded = jsonDecode(response.body);
+    final response = await httpService.get('recipes/my');
 
-      return (decoded['data'] as List)
-          .map((e) => Recipe.fromMap(e as Map<String, dynamic>))
-          .toList();
-    } catch (e) {
-      print('Error getMyRecipes: $e');
-      return [];
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.body);
+      final List data = decoded['data'];
+
+      return data.map((e) => Recipe.fromMap(e)).toList();
     }
+
+    throw Exception('Gagal mengambil resep saya');
   }
+
 
   // Tambah resep (WAJIB FILE)
   Future<bool> createRecipe({
