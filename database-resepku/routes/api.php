@@ -16,6 +16,13 @@ Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     ]);
 });
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return response()->json([
+        'success' => true,
+        'data' => $request->user()
+    ]);
+});
+
 Route::get('/recipes', [RecipeController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -27,6 +34,9 @@ Route::get('/recipes/{id}', [RecipeController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/recipes/{id}', [RecipeController::class, 'update']);
 });
+
+Route::get('/recipes/my', [RecipeController::class, 'myRecipes'])
+    ->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);

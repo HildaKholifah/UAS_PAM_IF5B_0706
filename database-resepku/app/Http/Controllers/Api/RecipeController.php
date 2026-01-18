@@ -69,6 +69,14 @@ class RecipeController extends Controller
         ], 201);
     }
 
+    public function myRecipes(Request $request)
+    {
+        return response()->json([
+            'success' => true,
+            'data' => Recipe::where('user_id', $request->user()->id)->get()
+        ]);
+    }
+
     public function show($id)
     {
         $recipe = Recipe::with('user:id,name')
