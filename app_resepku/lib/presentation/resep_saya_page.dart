@@ -1,3 +1,4 @@
+import 'package:app_resepku/presentation/edit_resep_page.dart';
 import 'package:app_resepku/presentation/home_page.dart';
 import 'package:app_resepku/presentation/profil_page.dart';
 import 'package:app_resepku/presentation/tambah_resep_page.dart';
@@ -162,6 +163,26 @@ class _MyRecipePageState extends State<ResepSayaPage> {
                   fontSize: 15,
                 ),
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.orange),
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EditResepPage(recipe: recipe),
+                      ),
+                    );
+
+                    if (result == true) {
+                      _loadMyRecipes(); // refresh
+                    }
+                  },
+                ),
+              ],
             ),
           ],
         ),
