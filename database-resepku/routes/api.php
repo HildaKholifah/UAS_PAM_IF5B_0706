@@ -10,11 +10,6 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-// Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
-//     return response()->json([
-//         'user' => $request->user()
-//     ]);
-// });
 Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
     return response()->json([
         'success' => true,
@@ -32,22 +27,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/recipes', [RecipeController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('recipes/my', [RecipeController::class, 'myRecipes']);
-});
-
-Route::middleware('auth:sanctum')->group(function () {
     Route::post('/recipes', [RecipeController::class, 'store']);
+    Route::get('/recipes/my', [RecipeController::class, 'myRecipes']);
+    Route::put('/recipes/{id}', [RecipeController::class, 'update']); 
+    Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
 });
 
 Route::get('/recipes/{id}', [RecipeController::class, 'show']);
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/recipes/{id}', [RecipeController::class, 'update']);
-});
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
-});
 
 Route::middleware('auth:sanctum')->delete(
     '/recipes/{id}/image', 
