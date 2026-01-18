@@ -1,0 +1,48 @@
+[33mf828dae[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33m9d8a7b3[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{1}: commit: Menambahkan pemilihan foto dalam tambah resep, dan memperbaiki erro
+[33mf828dae[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{2}: commit: Menambahkan kode di untuk mengakses recipe berdasarkan user
+[33mca04802[m HEAD@{3}: commit: Memperbaiki beberapa kode
+[33m65126d9[m HEAD@{4}: commit: Memperbaiki tampilan profil dengan menambahkan tab dan tombol back, dan menambahkan pop konfirmasi
+[33mc2e6921[m HEAD@{5}: commit: Membuat halaman profil (baru menampilkan username, email, dan bisa logout
+[33m4d69842[m HEAD@{6}: reset: moving to origin/main
+[33m4d69842[m HEAD@{7}: checkout: moving from main to main
+[33m4d69842[m HEAD@{8}: commit: Membuat halaman tambah resep
+[33m16e6c3a[m HEAD@{9}: commit: Membuat halaman Resep saya
+[33mba2c4bd[m HEAD@{10}: commit: Membuat halaman detail
+[33mb24a344[m HEAD@{11}: commit: Resep sudah tertampil di home_page
+[33md6f2ac0[m HEAD@{12}: commit: Menambah recipe_request
+[33m11d268a[m HEAD@{13}: commit: Menambah recipe_response
+[33maa8b508[m HEAD@{14}: commit: Merubah tampilan tab
+[33mc79065b[m HEAD@{15}: commit (amend): Menambah kode recipe_repository dan mengganti username yang di panggil di halaman home_page
+[33m3273a69[m HEAD@{16}: commit (amend): Menambah kode recipe_repository dan mengganti username yang di panggil di halaman home_pahe
+[33mc764f4c[m HEAD@{17}: commit (amend): Mengganti username yang ditampilkan
+[33mc2ff80f[m HEAD@{18}: commit (amend): Mengganti username yang ditampilkan
+[33m921c90f[m HEAD@{19}: commit: Menambah home_page
+[33meaa2999[m HEAD@{20}: commit: Menambah home_page
+[33mec38d9b[m HEAD@{21}: commit: Memperbaiki tampilan register page
+[33m6fd99a0[m HEAD@{22}: commit: Memperbaki tampilan login page dan menambahkan model recipe
+[33m8ae5070[m HEAD@{23}: commit: Membuat file token_storage
+[33mffa550f[m HEAD@{24}: commit: Membuat halaman register page
+[33m0c4c045[m HEAD@{25}: commit: Membuat halaman login page dan memrevisi kode yang terhubung ke backend
+[33me76617c[m HEAD@{26}: commit: Menambahkan user_repository
+[33m7f81372[m HEAD@{27}: commit: Menambahkan http_servise dan instalasi http di flutter
+[33m654f5fa[m HEAD@{28}: commit: Menambahkan register_request
+[33m48f46c1[m HEAD@{29}: commit: Menambahkan register_response
+[33mb324912[m HEAD@{30}: commit: Menambahkan login_request
+[33m85fb6f6[m HEAD@{31}: commit: Menambahkan login_response
+[33mb2201ad[m HEAD@{32}: commit: Menambahkan model user
+[33m13d2167[m HEAD@{33}: reset: moving to HEAD~5
+[33ma27cb77[m HEAD@{34}: commit: Menambahkan register_request
+[33ma6dd24a[m HEAD@{35}: commit: Menambahkan login_request
+[33mfa1a8a9[m HEAD@{36}: commit: Menambahkan register_response
+[33mc8eebd7[m HEAD@{37}: commit: Menambahkan login_response
+[33ma46e116[m HEAD@{38}: commit: Menambahkan model user
+[33m13d2167[m HEAD@{39}: commit: API RESEP selesai dibuat
+[33m7581ecb[m HEAD@{40}: commit: API RESEP: detail resep dan edit resep
+[33m6de0a67[m HEAD@{41}: commit: API RESEP: Tambah Resep
+[33m8799a32[m HEAD@{42}: commit: API RESEP: Daftar Resep
+[33m9381fe0[m HEAD@{43}: commit: API Auth login, logout, dan validasi register dan login
+[33m549e319[m HEAD@{44}: commit: API AUth register dan menyimpan data user ke database
+[33m4eb54a7[m HEAD@{45}: commit: Laravel api setup dengan database dan Sanctum
+[33m41330cb[m HEAD@{46}: Branch: renamed refs/heads/master to refs/heads/main
+[33m41330cb[m HEAD@{48}: commit (initial): Commit pertama folder api dan flutter

@@ -115,11 +115,22 @@ class _TambahResepPageState extends State<TambahResepPage> {
     String? hint,
     int maxLines = 1,
   }) {
+    final bool isMultiline = maxLines > 1;
+
     return TextFormField(
       controller: controller,
-      maxLines: maxLines,
+      maxLines: isMultiline ? null : 1,
+      minLines: isMultiline ? maxLines : 1,
+
+      keyboardType: isMultiline ? TextInputType.multiline : TextInputType.text,
+
+      textInputAction: isMultiline
+          ? TextInputAction.newline
+          : TextInputAction.next,
+
       validator: (v) =>
           v == null || v.isEmpty ? "$label tidak boleh kosong" : null,
+
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
