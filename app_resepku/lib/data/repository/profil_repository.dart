@@ -1,24 +1,19 @@
 import 'dart:convert';
 import 'package:app_resepku/data/model/user.dart';
 import 'package:app_resepku/data/service/http_service.dart';
-import 'package:app_resepku/data/service/token_storage.dart';
 
 class ProfilRepository {
-  final HttpService httpService = HttpService();
-  final tokenStorage = TokenStorage();
+  final HttpService _http = HttpService();
 
   Future<User> getProfile() async {
-    final token = await tokenStorage.getToken();
-    if (token == null) throw Exception('Token tidak ditemukan');
+    final response = await _http.get('me');
 
-    final res = await httpService.get('user');
-
-    if (res.statusCode == 200) {
-      final json = jsonDecode(res.body);
-      final data = json['user'];
-      return User.fromMap(data);
-    } else {
-      throw Exception('Profil gagal dimuat');
+    if (response.statusCode != 200) {
+      throw Exception('HTTP error');
     }
+
+    final Map<String, dynamic> json = jsonDecode(response.body);
+
+    return User.fromJson(json['user']);
   }
 }

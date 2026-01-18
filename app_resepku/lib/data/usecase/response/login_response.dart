@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:app_resepku/data/model/user.dart';
 
 class LoginResponse {
@@ -14,15 +13,12 @@ class LoginResponse {
     required this.user,
   });
 
-  factory LoginResponse.fromJson(String str) =>
-      LoginResponse.fromMap(json.decode(str));
-
   factory LoginResponse.fromMap(Map<String, dynamic> json) {
     return LoginResponse(
       status: json['status'] ?? '',
       message: json['message'] ?? '',
       token: json['token'] ?? '',
-      user: User.fromMap(json['user']),
+      user: User.fromJson(json['user']),
     );
   }
 }

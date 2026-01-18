@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_resepku/data/service/http_service.dart';
 import 'package:app_resepku/data/service/token_storage.dart';
 import 'package:app_resepku/data/usecase/request/login_request.dart';
@@ -12,7 +14,8 @@ class UserRepository {
   Future<LoginResponse> login(LoginRequest request) async {
     final response = await httpService.post('login', request.toMap());
 
-    final loginResponse = LoginResponse.fromJson(response.body);
+    final decoded = jsonDecode(response.body);
+    final loginResponse = LoginResponse.fromMap(decoded);
 
     // ✅ SIMPAN TOKEN JIKA LOGIN BERHASIL
     if (loginResponse.status == 'success' && loginResponse.token.isNotEmpty) {
@@ -25,7 +28,8 @@ class UserRepository {
   Future<RegisterResponse> register(RegisterRequest request) async {
     final response = await httpService.post('register', request.toMap());
 
-    return RegisterResponse.fromJson(response.body);
+    final decoded = jsonDecode(response.body);
+    return RegisterResponse.fromMap(decoded);
   }
 
   Future<void> logout() async {

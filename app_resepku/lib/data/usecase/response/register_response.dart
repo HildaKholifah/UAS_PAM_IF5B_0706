@@ -1,5 +1,4 @@
-import 'dart:convert';
-import '../../model/user.dart';
+import 'package:app_resepku/data/model/user.dart';
 
 class RegisterResponse {
   final bool success;
@@ -8,13 +7,10 @@ class RegisterResponse {
 
   RegisterResponse({required this.success, required this.message, this.data});
 
-  factory RegisterResponse.fromJson(String str) =>
-      RegisterResponse.fromMap(json.decode(str));
-
   factory RegisterResponse.fromMap(Map<String, dynamic> json) {
     return RegisterResponse(
-      success: json['success'],
-      message: json['message'],
+      success: json['success'] ?? false,
+      message: json['message'] ?? '',
       data: json['data'] != null ? RegisterData.fromMap(json['data']) : null,
     );
   }
@@ -27,6 +23,9 @@ class RegisterData {
   RegisterData({required this.user, required this.token});
 
   factory RegisterData.fromMap(Map<String, dynamic> json) {
-    return RegisterData(user: User.fromMap(json['user']), token: json['token']);
+    return RegisterData(
+      user: User.fromJson(json['user']),
+      token: json['token'] ?? '',
+    );
   }
 }

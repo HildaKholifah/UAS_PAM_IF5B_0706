@@ -56,14 +56,13 @@ class _MyRecipePageState extends State<ResepSayaPage> {
         icon: const Icon(Icons.add),
         label: const Text("Tambah Resep"),
         onPressed: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const TambahResepPage()),
-          );
-
-          if (result == true) {
-            _loadMyRecipes(); // Refresh
-          }
+          final result =
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const TambahResepPage()),
+              ).then((_) {
+                _loadMyRecipes();
+              });
         },
       ),
       bottomNavigationBar: _buildBottomNav(),
