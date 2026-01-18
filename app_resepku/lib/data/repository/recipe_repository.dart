@@ -64,6 +64,18 @@ class RecipeRepository {
     }
   }
 
+  Future<void> deleteRecipe(int id) async {
+    final headers = await httpService.getHeaders();
+    final response = await http.delete(
+      Uri.parse('${httpService.baseUrl}recipes/$id'),
+      headers: headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Gagal menghapus resep');
+    }
+  }
+
   // Ambil semua resep
   Future<List<Recipe>> getAllRecipes() async {
     try {

@@ -182,10 +182,39 @@ class _MyRecipePageState extends State<ResepSayaPage> {
                     }
                   },
                 ),
+
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () => _confirmDelete(recipe.id),
+                ),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _confirmDelete(int recipeId) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Hapus Resep"),
+        content: const Text("Yakin ingin menghapus resep ini?"),
+        actions: [
+          TextButton(
+            child: const Text("Batal"),
+            onPressed: () => Navigator.pop(context),
+          ),
+          TextButton(
+            child: const Text("Hapus", style: TextStyle(color: Colors.red)),
+            onPressed: () async {
+              Navigator.pop(context);
+              await _repository.deleteRecipe(recipeId);
+              _loadMyRecipes();
+            },
+          ),
+        ],
       ),
     );
   }
