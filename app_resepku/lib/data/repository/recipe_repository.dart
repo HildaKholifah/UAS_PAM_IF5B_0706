@@ -11,6 +11,59 @@ import 'package:path_provider/path_provider.dart';
 class RecipeRepository {
   final HttpService httpService = HttpService();
 
+  Future<bool> updateRecipe({
+    required int id,
+    required String title,
+    required String description,
+    required List<String> ingredients,
+    required List<String> steps,
+    File? imageFile, // optional
+  }) async {
+    final headers = await httpService.getHeaders();
+
+    final uri = Uri.parse('${httpService.baseUrl}recipes/$id');
+    final request = http.MultipartRequest('POST', uri);
+
+    // Header (WAJIB)
+    request.headers.addAll(headers);
+
+    // Laravel method spoofing
+    request.fields['_method'] = 'PUT';
+
+    // Fields utama
+    request.fields['title'] = title;
+    request.fields['description'] = description;
+
+    // Ingredients (ARRAY)
+    for (int i = 0; i < ingredients.length; i++) {
+      request.fields['ingredients[$i]'] = ingredients[i];
+    }
+
+    // Steps (ARRAY)
+    for (int i = 0; i < steps.length; i++) {
+      request.fields['steps[$i]'] = steps[i];
+    }
+
+    // Image (OPTIONAL)
+    if (imageFile != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path),
+      );
+    }
+
+    final response = await request.send();
+    final body = await response.stream.bytesToString();
+
+    print('UPDATE RECIPE STATUS: ${response.statusCode}');
+    print('UPDATE RECIPE BODY: $body');
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(body);
+    }
+  }
+
   // Ambil semua resep
   Future<List<Recipe>> getAllRecipes() async {
     try {
@@ -37,7 +90,6 @@ class RecipeRepository {
 
     throw Exception('Gagal mengambil resep saya');
   }
-
 
   // Tambah resep (WAJIB FILE)
   Future<bool> createRecipe({
@@ -66,10 +118,7 @@ class RecipeRepository {
     }
 
     request.files.add(
-      await http.MultipartFile.fromPath(
-        'image',
-        compressedImage.path,
-      ),
+      await http.MultipartFile.fromPath('image', compressedImage.path),
     );
     final response = await request.send();
     final body = await response.stream.bytesToString();
@@ -94,9 +143,9 @@ class RecipeRepository {
     final result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
-      quality: 60,        // ⬅️ PENTING
-      minWidth: 1024,     // ⬅️ PENTING
-      minHeight: 1024,    // ⬅️ PENTING
+      quality: 60, //  PENTING
+      minWidth: 1024, //  PENTING
+      minHeight: 1024, //  PENTING
     );
 
     if (result == null) throw Exception('Gagal kompres gambar');
