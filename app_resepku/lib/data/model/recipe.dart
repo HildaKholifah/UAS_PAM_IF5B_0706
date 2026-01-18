@@ -4,19 +4,21 @@ class Recipe {
   final int id;
   final String title;
   final String description;
-  final String? imageUrl;
   final List<String> ingredients;
   final List<String> steps;
+  final String? imageUrl;
   final int userId;
+  final String? username;
 
   Recipe({
     required this.id,
     required this.title,
     required this.description,
-    this.imageUrl,
     required this.ingredients,
     required this.steps,
+    this.imageUrl,
     required this.userId,
+    this.username,
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
@@ -50,7 +52,7 @@ class Recipe {
       id: map['id'],
       title: map['title'] ?? '',
       description: map['description'] ?? '',
-      imageUrl: map['image_url'],
+      // imageUrl: map['image_url'],
       ingredients: ingredientsList,
       steps: stepsList,
       userId: map['user_id'] ?? 0,

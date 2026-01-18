@@ -58,7 +58,7 @@ class _MyRecipePageState extends State<ResepSayaPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => TambahResepPage(username: widget.username),
+              builder: (_) => TambahResepPage(),
             ),
           );
         },
