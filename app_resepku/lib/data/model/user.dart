@@ -13,15 +13,14 @@ class User {
     required this.createdAt,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory User.fromMap(Map<String, dynamic> json) {
     return User(
       id: json['id'],
       name: json['name'] ?? '',
       email: json['email'] ?? '',
-      createdAt: DateTime.parse(json['created_at']),
+      createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
     );
   }
-
 
   Map<String, dynamic> toMap() => {
     'id': id,

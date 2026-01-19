@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RecipeController;
 use Illuminate\Http\Request;
@@ -16,6 +17,13 @@ Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
         'data' => $request->user()
     ]);
 });
+
+Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
+    return response()->json([
+        'user' => $request->user()
+    ]);
+});
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json([
@@ -39,6 +47,11 @@ Route::middleware('auth:sanctum')->delete(
     '/recipes/{id}/image', 
     [RecipeController::class, 'deletePhoto']
 );
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/favorites/{recipeId}', [FavoriteController::class, 'toggle']); // Tambah/hapus favorit
+    Route::get('/favorites', [FavoriteController::class, 'myFavorites']); // Resep favorit user
+});
 
 Route::get('/ping', function () {
     return response()->json([

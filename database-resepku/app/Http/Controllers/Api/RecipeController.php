@@ -243,30 +243,55 @@ class RecipeController extends Controller
     }
 
     // POST api/recipes/{id}/rate
-public function rate(Request $request, $id)
-{
-    $request->validate([
-        'rating' => 'required|integer|min:1|max:5'
-    ]);
+    public function rate(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5'
+        ]);
 
-    $recipe = Recipe::find($id);
-    if (!$recipe) {
+        $recipe = Recipe::find($id);
+        if (!$recipe) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Resep tidak ditemukan'
+            ], 404);
+        }
+
+        // Simpan rating user, misal di table recipe_ratings (user_id, recipe_id, rating)
+        $recipe->ratings()->updateOrCreate(
+            ['user_id' => $request->user()->id],
+            ['rating' => $request->rating]
+        );
+
         return response()->json([
-            'success' => false,
-            'message' => 'Resep tidak ditemukan'
-        ], 404);
+            'success' => true,
+            'message' => 'Rating berhasil disimpan'
+        ], 200);
     }
 
-    // Simpan rating user, misal di table recipe_ratings (user_id, recipe_id, rating)
-    $recipe->ratings()->updateOrCreate(
-        ['user_id' => $request->user()->id],
-        ['rating' => $request->rating]
-    );
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Rating berhasil disimpan'
-    ], 200);
-}
+    // POST api/recipes/{id}/favorite
+    public function toggleFavorite(Request $request, $id)
+    {
+        $recipe = Recipe::find($id);
+        if (!$recipe) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Resep tidak ditemukan'
+            ], 404);
+        }
 
+        $user = $request->user();
+        $favorite = $user->favorites()->where('recipe_id', $id)->first();
+
+        if ($favorite) {
+            $favorite->delete();
+            $message = 'Resep dihapus dari favorit';
+        } else {
+            $user->favorites()->create(['recipe_id' => $id]);
+            $message = 'Resep ditambahkan ke favorit';
+        }
+
+        return response()->json(['success' => true, 'message' => $message]);
+    }
 }

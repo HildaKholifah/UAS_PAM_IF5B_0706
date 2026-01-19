@@ -45,4 +45,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Relasi Many-to-Many ke resep yang difavoritkan
+     */
+    public function favorites()
+    {
+        return $this->belongsToMany(
+            Recipe::class,   
+            'favorites',    
+            'user_id',      
+            'recipe_id'     
+        );
+    }
 }
