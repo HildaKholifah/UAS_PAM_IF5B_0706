@@ -18,7 +18,7 @@ class LoginResponse {
       status: json['status'] ?? '',
       message: json['message'] ?? '',
       token: json['token'] ?? '',
-      user: User.fromJson(json['user']),
+      user: User.fromMap(json['user']),
     );
   }
 }
