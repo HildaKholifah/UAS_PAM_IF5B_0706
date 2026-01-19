@@ -87,7 +87,6 @@ class RecipeController extends Controller
         ], 200);
     }
 
-
     public function show($id)
     {
         $recipe = Recipe::with('user:id,name')
@@ -242,4 +241,32 @@ class RecipeController extends Controller
             'message' => 'Foto resep berhasil dihapus'
         ]);
     }
+
+    // POST api/recipes/{id}/rate
+public function rate(Request $request, $id)
+{
+    $request->validate([
+        'rating' => 'required|integer|min:1|max:5'
+    ]);
+
+    $recipe = Recipe::find($id);
+    if (!$recipe) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Resep tidak ditemukan'
+        ], 404);
+    }
+
+    // Simpan rating user, misal di table recipe_ratings (user_id, recipe_id, rating)
+    $recipe->ratings()->updateOrCreate(
+        ['user_id' => $request->user()->id],
+        ['rating' => $request->rating]
+    );
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Rating berhasil disimpan'
+    ], 200);
+}
+
 }
