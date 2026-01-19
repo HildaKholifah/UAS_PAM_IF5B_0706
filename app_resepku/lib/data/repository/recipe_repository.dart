@@ -168,12 +168,41 @@ class RecipeRepository {
   Future<bool> rateRecipe({required int recipeId, required int rating}) async {
     final uri = Uri.parse('${httpService.baseUrl}recipes/$recipeId/rate');
     final headers = await httpService.getHeaders();
-    
-    final response = await httpService.post(
-      'recipes/$recipeId/rate',
-      {'rating': rating},
-    );
+
+    final response = await httpService.post('recipes/$recipeId/rate', {
+      'rating': rating,
+    });
 
     return response.statusCode == 200;
+  }
+
+  // Tambah / hapus favorit
+  Future<bool> toggleFavorite(int recipeId) async {
+    final uri = Uri.parse('${httpService.baseUrl}favorites/$recipeId');
+    final headers = await httpService.getHeaders();
+
+    final response = await http.post(uri, headers: headers);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Gagal toggle favorit: ${response.body}');
+    }
+  }
+
+  // Ambil semua resep favorit user
+  Future<List<Recipe>> getMyFavorites() async {
+    final uri = Uri.parse('${httpService.baseUrl}favorites');
+    final headers = await httpService.getHeaders();
+    final response = await http.get(uri, headers: headers);
+
+    if (response.statusCode != 200) {
+      throw Exception('Gagal memuat favorit: ${response.statusCode}');
+    }
+
+    final jsonData = jsonDecode(response.body);
+
+    if (!jsonData.containsKey('data')) return [];
+
+    return (jsonData['data'] as List).map((e) => Recipe.fromMap(e)).toList();
   }
 }
