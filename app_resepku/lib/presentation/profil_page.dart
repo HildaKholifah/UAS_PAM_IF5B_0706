@@ -16,7 +16,6 @@ class _ProfilPageState extends State<ProfilPage> {
   final UserRepository _userRepo = UserRepository();
 
   late Future<User> _profileFuture;
-  int _selectedIndex = 3;
 
   @override
   void initState() {
@@ -60,16 +59,10 @@ class _ProfilPageState extends State<ProfilPage> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: const Color(0xFFB8792F),
-        centerTitle: true, 
+        centerTitle: true,
         title: const Text(
           "Profil",
           style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
       ),
       body: FutureBuilder<User>(
@@ -92,24 +85,6 @@ class _ProfilPageState extends State<ProfilPage> {
           final user = snapshot.data!;
           return _profileContent(context, user);
         },
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFF6B3E26),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Resep Saya'),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Rating'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
       ),
     );
   }

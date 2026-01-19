@@ -1,5 +1,6 @@
 import 'package:app_resepku/presentation/detail_resep_page.dart';
 import 'package:app_resepku/presentation/profil_page.dart';
+import 'package:app_resepku/presentation/rating_page.dart';
 import 'package:app_resepku/presentation/resep_saya_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app_resepku/data/model/recipe.dart';
@@ -42,6 +43,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late HomeViewModel viewModel;
   int _selectedIndex = 0;
+  List get _pages => [
+    dashboard(),
+    ResepSayaPage(username: widget.username),
+    RatingPage(),
+    ProfilPage(),
+  ];
 
   final TextEditingController _searchController = TextEditingController();
   List<Recipe> _filteredRecipes = [];
@@ -76,26 +83,28 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
+      bottomNavigationBar: _buildBottomNav(),
+      body: _pages[_selectedIndex],
+    );
+  }
+
+  // dashboard
+  Widget dashboard() {
+    return Scaffold(
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: AnimatedBuilder(
-          animation: viewModel,
-          builder: (context, _) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _greetingText(),
-                const SizedBox(height: 20),
-                _searchBar(),
-                const SizedBox(height: 20),
-                Expanded(child: _buildContent()),
-              ],
-            );
-          },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _greetingText(),
+            const SizedBox(height: 20),
+            _searchBar(),
+            const SizedBox(height: 20),
+            Expanded(child: _buildContent()),
+          ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
@@ -245,8 +254,10 @@ class _HomePageState extends State<HomePage> {
                         recipe.imageUrl!,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Text("$error"),
+                        errorBuilder: (context, error, stackTrace) {
+                          print("Image load error: $error");
+                          return Text("$error");
+                        },
                       );
                     }
                   },
@@ -286,21 +297,6 @@ class _HomePageState extends State<HomePage> {
       type: BottomNavigationBarType.fixed,
       onTap: (index) {
         setState(() => _selectedIndex = index);
-        if (index == 1) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ResepSayaPage(username: widget.username),
-            ),
-          );
-        }
-
-        if (index == 3) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => ProfilPage()),
-          );
-        }
       },
 
       items: const [

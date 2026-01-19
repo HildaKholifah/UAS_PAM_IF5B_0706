@@ -22,7 +22,6 @@ class _MyRecipePageState extends State<ResepSayaPage> {
   bool _isLoading = true;
   List<Recipe> _recipes = [];
 
-  final int _selectedIndex = 1;
   static const primaryBrown = Color(0xFF6B3E26);
 
   @override
@@ -66,7 +65,6 @@ class _MyRecipePageState extends State<ResepSayaPage> {
               });
         },
       ),
-      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
@@ -216,44 +214,6 @@ class _MyRecipePageState extends State<ResepSayaPage> {
           ),
         ],
       ),
-    );
-  }
-
-  BottomNavigationBar _buildBottomNav() {
-    return BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      selectedItemColor: primaryBrown,
-      unselectedItemColor: Colors.grey,
-      type: BottomNavigationBarType.fixed,
-      onTap: (index) {
-        if (index == _selectedIndex) return;
-
-        if (index == 0) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => HomePage(username: widget.username),
-            ),
-          );
-        }
-
-        if (index == 2) {
-          // RatingPage
-        }
-
-        if (index == 3) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => ProfilPage()),
-          );
-        }
-      },
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.book), label: "Resep Saya"),
-        BottomNavigationBarItem(icon: Icon(Icons.star), label: "Penilaian"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
-      ],
     );
   }
 

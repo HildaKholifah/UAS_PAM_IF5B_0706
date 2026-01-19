@@ -92,16 +92,16 @@ class RecipeController extends Controller
         $recipe = Recipe::with('user:id,name')
             ->find($id);
 
-        $recipe->image_url = $recipe->image
-            ? asset('storage/' . $recipe->image)
-            : null;
-
         if (!$recipe) {
             return response()->json([
                 'success' => false,
                 'message' => 'Resep tidak ditemukan'
             ], 404);
         }
+
+        $recipe->image_url = $recipe->image
+            ? asset('storage/' . $recipe->image)
+            : null;
 
         return response()->json([
             'success' => true,

@@ -48,16 +48,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 | Recipe Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/recipes', [RecipeController::class, 'index']); // Public list
-Route::get('/recipes/{id}', [RecipeController::class, 'show']); // Public detail
-
+Route::get('/recipes', [RecipeController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/recipes/my', [RecipeController::class, 'myRecipes']); 
+    
     Route::post('/recipes', [RecipeController::class, 'store']);
-    Route::get('/recipes/my', [RecipeController::class, 'myRecipes']);
     Route::put('/recipes/{id}', [RecipeController::class, 'update']); 
     Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
     Route::delete('/recipes/{id}/image', [RecipeController::class, 'deletePhoto']);
 });
+Route::get('/recipes/{id}', [RecipeController::class, 'show']);
 
 /*
 |--------------------------------------------------------------------------

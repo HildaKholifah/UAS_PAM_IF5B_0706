@@ -5,8 +5,9 @@ import 'package:http/http.dart' as http;
 import 'token_storage.dart';
 
 class HttpService {
-  // final String baseUrl = "http://192.168.1.15:8000/api/";
-  final String baseUrl = "http://127.0.0.1:8000/api/";
+  final String baseUrl = "http://10.29.130.207:8000/api/";
+  // final String baseUrl = "http://127.0.0.1:8000/api/";
+  // final String baseUrl = "http://10.0.2.2:8000/api/";
   final TokenStorage tokenStorage = TokenStorage();
 
   // PUBLIK (BUKAN PRIVATE)
@@ -14,7 +15,6 @@ class HttpService {
     final token = await tokenStorage.getToken();
     return {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
   }
-
   Future<http.Response> get(String endpoint) async {
     final url = Uri.parse('$baseUrl$endpoint');
     final headers = await getHeaders();

@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           }
 
           return snapshot.data!
-              ? const HomePage(username: 'Admin')
+              ? const HomePage(username: 'Hilda')
               : const LoginPage();
         },
       ),
