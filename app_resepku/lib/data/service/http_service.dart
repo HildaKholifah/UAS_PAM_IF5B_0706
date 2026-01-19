@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'token_storage.dart';
 
 class HttpService {
-  final String baseUrl = "http://192.168.100.152:8000/api/";
+  final String baseUrl = "http://10.16.43.198:8000/api/";
   final TokenStorage tokenStorage = TokenStorage();
 
   // PUBLIK (BUKAN PRIVATE)
