@@ -49,8 +49,8 @@ Route::middleware('auth:sanctum')->delete(
 );
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/favorites/{recipeId}', [FavoriteController::class, 'toggle']); // Tambah/hapus favorit
-    Route::get('/favorites', [FavoriteController::class, 'myFavorites']); // Resep favorit user
+    Route::post('/favorites/{recipeId}', [FavoriteController::class, 'toggle']); 
+    Route::get('/favorites', [FavoriteController::class, 'myFavorites']); 
 });
 
 Route::get('/ping', function () {
