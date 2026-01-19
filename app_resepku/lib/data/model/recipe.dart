@@ -9,6 +9,7 @@ class Recipe {
   final String? imageUrl;
   final int userId;
   final String? username;
+  bool isFavorite;
 
   Recipe({
     required this.id,
@@ -19,6 +20,7 @@ class Recipe {
     this.imageUrl,
     required this.userId,
     this.username,
+    this.isFavorite = false,
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
@@ -59,6 +61,7 @@ class Recipe {
       imageUrl: map['image_url'],
       userId: map['user_id'] ?? 0,
       username: map['user']?['name'],
+      isFavorite: map['isFavorited'] ?? false,
     );
   }
 }
