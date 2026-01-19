@@ -24,7 +24,7 @@ class RegisterData {
 
   factory RegisterData.fromMap(Map<String, dynamic> json) {
     return RegisterData(
-      user: User.fromJson(json['user']),
+      user: User.fromMap(json['user']),
       token: json['token'] ?? '',
     );
   }
