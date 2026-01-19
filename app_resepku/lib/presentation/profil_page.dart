@@ -54,27 +54,6 @@ class _ProfilPageState extends State<ProfilPage> {
     );
   }
 
-  // Navigasi tab
-  void _onNavTap(int index) {
-    // if (index == _selectedIndex) return;
-
-    // if (index == 0) {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (_) => const HomePage(username: 'User')),
-    //   );
-    // } else if (index == 1) {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (_) => const ResepSayaPage(username: 'User'),
-    //     ),
-    //   );
-    // }
-
-    setState(() => _selectedIndex = index);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,11 +79,12 @@ class _ProfilPageState extends State<ProfilPage> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (snapshot.hasError || !snapshot.hasData) {
+          if (snapshot.hasError) {
             return Center(
               child: Text(
-                "Gagal memuat profil",
+                "Gagal memuat profil\n${snapshot.error}",
                 style: TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
               ),
             );
           }
@@ -116,7 +96,11 @@ class _ProfilPageState extends State<ProfilPage> {
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: _onNavTap,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFF6B3E26),
         unselectedItemColor: Colors.grey,
