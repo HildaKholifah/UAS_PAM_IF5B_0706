@@ -127,6 +127,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisSpacing: 12,
       ),
       itemBuilder: (context, index) {
+        print(_filteredRecipes[index].imageUrl);
         return _recipeCard(_filteredRecipes[index]);
       },
     );
@@ -235,14 +236,21 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(16),
                 ),
-                child: recipe.imageUrl?.isNotEmpty == true
-                    ? Image.network(
+                child: Builder(
+                  builder: (context) {
+                    if (recipe.imageUrl == null || recipe.imageUrl!.isEmpty) {
+                      return _imageError();
+                    } else {
+                      return Image.network(
                         recipe.imageUrl!,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _imageError(),
-                      )
-                    : _imageError(),
+                        errorBuilder: (context, error, stackTrace) =>
+                            Text("$error"),
+                      );
+                    }
+                  },
+                ),
               ),
             ),
             Padding(
@@ -294,7 +302,7 @@ class _HomePageState extends State<HomePage> {
           );
         }
       },
-      
+
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.book), label: "Resep Saya"),
