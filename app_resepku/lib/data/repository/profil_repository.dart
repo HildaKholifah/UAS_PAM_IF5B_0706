@@ -11,9 +11,12 @@ class ProfilRepository {
     if (response.statusCode != 200) {
       throw Exception('HTTP error');
     }
-
     final Map<String, dynamic> json = jsonDecode(response.body);
 
-    return User.fromJson(json['user']);
+    if (!json.containsKey('user')) {
+      throw Exception('Invalid profile response');
+    }
+
+    return User.fromMap(json['user']);
   }
 }
