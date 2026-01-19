@@ -164,4 +164,16 @@ class RecipeRepository {
 
     return File(result.path);
   }
+
+  Future<bool> rateRecipe({required int recipeId, required int rating}) async {
+    final uri = Uri.parse('${httpService.baseUrl}recipes/$recipeId/rate');
+    final headers = await httpService.getHeaders();
+    
+    final response = await httpService.post(
+      'recipes/$recipeId/rate',
+      {'rating': rating},
+    );
+
+    return response.statusCode == 200;
+  }
 }
